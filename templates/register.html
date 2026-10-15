@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% from "_macros.html" import csrf %}{% block title %}Register{% endblock %}
+{% block content %}<div class="container"><div class="row justify-content-center"><div class="col-md-7 col-lg-5"><div class="card shadow-sm mt-4"><div class="card-body p-4">
+  <h3 class="mb-3 text-hc">Create a customer account</h3>
+  <form method="post" novalidate>{{ csrf() }}
+    <div class="mb-3"><label class="form-label" for="name">Full name</label><input class="form-control" id="name" name="name" maxlength="80" value="{{ form.get('name','') }}" required></div>
+    <div class="mb-3"><label class="form-label" for="email">Email</label><input class="form-control" id="email" name="email" type="email" maxlength="120" value="{{ form.get('email','') }}" required></div>
+    <div class="mb-3"><label class="form-label" for="phone">Phone</label><input class="form-control" id="phone" name="phone" type="tel" maxlength="20" value="{{ form.get('phone','') }}" required></div>
+    <div class="mb-3"><label class="form-label" for="password">Password</label><input class="form-control" id="password" name="password" type="password" minlength="8" maxlength="128" required><div class="form-text">At least 8 characters with a letter and a digit.</div></div>
+    <div class="mb-3"><label class="form-label" for="confirm_password">Confirm password</label><input class="form-control" id="confirm_password" name="confirm_password" type="password" maxlength="128" required></div>
+    <button class="btn btn-hc w-100">Register</button></form>
+  <p class="small text-muted mt-3 mb-0">Already registered? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+</div></div></div></div></div>{% endblock %}

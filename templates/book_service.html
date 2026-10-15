@@ -1,0 +1,12 @@
+{% extends "base.html" %}{% from "_macros.html" import csrf %}{% block title %}Book {{ service.name }}{% endblock %}
+{% block content %}<div class="container mt-4"><div class="row justify-content-center"><div class="col-lg-7">
+<div class="card shadow-sm"><div class="card-body p-4"><h3 class="text-hc">Book: {{ service.name }}</h3>
+<p class="text-muted">{{ service.price|money }} · about {{ service.duration_minutes }} minutes · Payment is collected separately (online payment is not available yet).</p>
+<form method="post" novalidate>{{ csrf() }}<div class="row g-3">
+  <div class="col-md-6"><label class="form-label" for="booking_date">Date</label><input class="form-control" id="booking_date" name="booking_date" type="date" min="{{ today }}" max="{{ max_date }}" value="{{ form.get('booking_date','') }}" required></div>
+  <div class="col-md-6"><label class="form-label" for="booking_time">Time slot</label><select class="form-select" id="booking_time" name="booking_time" required><option value="">Choose…</option>
+    {% for s in slots %}<option value="{{ s }}" {{ 'selected' if form.get('booking_time') == s }}>{{ s }}</option>{% endfor %}</select></div>
+  <div class="col-12"><label class="form-label" for="address">Service address</label><textarea class="form-control" id="address" name="address" rows="2" minlength="10" maxlength="300" required>{{ form.get('address','') }}</textarea></div>
+  <div class="col-12"><label class="form-label" for="notes">Describe the problem</label><textarea class="form-control" id="notes" name="notes" rows="3" minlength="5" maxlength="1000" required>{{ form.get('notes','') }}</textarea></div>
+  <div class="col-12"><button class="btn btn-hc">Submit booking request</button> <a class="btn btn-link" href="{{ url_for('main.service_detail', service_id=service._id) }}">Back</a></div>
+</div></form></div></div></div></div></div>{% endblock %}

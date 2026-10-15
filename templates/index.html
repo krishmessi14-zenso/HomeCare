@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% from "_macros.html" import service_card, category_image %}{% block title %}Home{% endblock %}
+{% block content %}
+<section class="hero"><div class="container"><div class="row align-items-center g-4">
+  <div class="col-lg-6"><h1 class="display-5 fw-bold">Home services,<br><span class="text-hc">done right.</span></h1>
+    <p class="lead text-muted">Book trusted, approved professionals for plumbing, electrical work, cleaning, repairs and more – all in one place.</p>
+    <a href="{{ url_for('main.services') }}" class="btn btn-hc btn-lg me-2">Browse Services</a>
+    {% if not current_user.is_authenticated %}<a href="{{ url_for('auth.register') }}" class="btn btn-outline-hc btn-lg">Create Account</a>{% endif %}</div>
+  <div class="col-lg-6"><img class="hero-photo" src="{{ url_for('static', filename='images/services/homecare-hero.jpg') }}" alt="Home care professional cleaning a bright living space" fetchpriority="high"></div>
+</div></div></section>
+<section class="container my-5"><h2 class="mb-4">Service Categories</h2><div class="row g-3">
+  {% for name, n in categories %}<div class="col-6 col-md-4 col-lg-3"><a class="category-tile" href="{{ url_for('main.services', category=name) }}"><img src="{{ category_image(name) }}" alt="" loading="lazy"><span>{{ name }}<small>{{ n }} service{{ 's' if n != 1 }}</small></span></a></div>
+  {% else %}<p class="text-muted">No services are available yet.</p>{% endfor %}</div></section>
+<section class="container my-5"><div class="d-flex justify-content-between align-items-center mb-3"><h2>Featured Services</h2><a href="{{ url_for('main.services') }}">View all →</a></div>
+  <div class="row g-4">{% for s in featured %}{{ service_card(s) }}{% else %}<p class="text-muted">Nothing to show yet.</p>{% endfor %}</div></section>
+<section class="bg-hc-light py-5"><div class="container"><h2 class="mb-4 text-center">How it works</h2><div class="row text-center g-4">
+  <div class="col-md-3"><h5>1. Choose</h5><p class="text-muted">Pick a service.</p></div><div class="col-md-3"><h5>2. Book</h5><p class="text-muted">Select a date, time and address.</p></div>
+  <div class="col-md-3"><h5>3. We assign</h5><p class="text-muted">An approved professional accepts your job.</p></div><div class="col-md-3"><h5>4. Review</h5><p class="text-muted">Rate the completed work.</p></div></div></div></section>
+{% endblock %}

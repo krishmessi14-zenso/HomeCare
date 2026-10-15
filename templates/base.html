@@ -1,0 +1,63 @@
+{% from "_macros.html" import csrf %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}HomeCare{% endblock %} – HomeCare</title>
+  <link rel="icon" href="{{ url_for('static', filename='images/logo.svg') }}" type="image/svg+xml">
+  <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-hc">
+  <div class="container">
+    <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('main.index') }}">
+      <img class="brand-logo" src="{{ url_for('static', filename='images/logo.svg') }}" alt="">HomeCare</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('main.index') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('main.services') }}">Services</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('main.reviews') }}">Reviews</a></li>
+        {% if current_user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.calendar') }}">Calendar</a></li>
+          {% if current_user.role == 'customer' %}<li class="nav-item"><a class="nav-link" href="{{ url_for('customer.dashboard') }}">My Bookings</a></li>
+          {% elif current_user.role == 'provider' %}<li class="nav-item"><a class="nav-link" href="{{ url_for('provider.dashboard') }}">My Jobs</a></li><li class="nav-item"><a class="nav-link" href="{{ url_for('provider.reviews') }}">My Reviews</a></li>
+          {% elif current_user.role == 'admin' %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.dashboard') }}">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.bookings') }}">Bookings</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.services') }}">Services</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.users') }}">Users</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.reviews') }}">Feedback</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin.reports') }}">Reports</a></li>
+          {% endif %}
+        {% endif %}
+      </ul>
+      <ul class="navbar-nav align-items-lg-center">
+        {% if current_user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('main.notifications') }}">Notifications{% if unread_notification_count %} <span class="badge bg-warning text-dark">{{ unread_notification_count }}</span>{% endif %}</a></li>
+          <li class="nav-item"><span class="nav-link">{{ current_user.name }} <span class="badge bg-light text-dark">{{ current_user.role }}</span></span></li>
+          <li class="nav-item"><form method="post" action="{{ url_for('auth.logout') }}">{{ csrf() }}<button class="btn btn-sm btn-light">Logout</button></form></li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
+          <li class="nav-item"><a class="btn btn-sm btn-light ms-lg-2" href="{{ url_for('auth.register') }}">Register</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+<main>
+  <div class="container mt-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}{% for cat, msg in messages %}
+      <div class="alert alert-{{ cat }} alert-dismissible fade show auto-dismiss" role="alert">{{ msg }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button></div>
+    {% endfor %}{% endwith %}
+  </div>
+  {% block content %}{% endblock %}
+</main>
+<footer class="footer-hc mt-5 py-4"><div class="container d-flex flex-wrap justify-content-between">
+  <span>&copy; {{ now_year }} HomeCare – House Service Management Portal</span><span class="small">Trusted help for every corner of your home.</span></div></footer>
+<script src="{{ url_for('static', filename='vendor/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

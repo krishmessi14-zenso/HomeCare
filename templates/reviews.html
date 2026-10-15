@@ -1,0 +1,4 @@
+{% extends "base.html" %}{% from "_macros.html" import stars %}{% block title %}Reviews{% endblock %}
+{% block content %}<div class="container mt-4"><h2>Customer Reviews</h2>{% if avg %}<p class="lead">{{ stars(avg|round|int) }} {{ avg }} average from {{ n }} review{{ 's' if n != 1 }}</p>{% endif %}
+{% for r in reviews %}<div class="card mb-2"><div class="card-body py-2">{{ stars(r.rating) }} <strong>{{ r.customer_first_name }}</strong> on <em>{{ r.service_name }}</em> <small class="text-muted">{{ r.created_at|pretty_dt }}</small><p class="mb-0">{{ r.comment }}</p></div></div>
+{% else %}<p class="text-muted">No reviews yet.</p>{% endfor %}</div>{% endblock %}

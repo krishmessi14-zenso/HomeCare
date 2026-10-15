@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% from "_macros.html" import csrf, status_badge %}{% block title %}My Bookings{% endblock %}
+{% block content %}<div class="container mt-4"><div class="d-flex justify-content-between align-items-center mb-3"><h2>My Bookings</h2><a href="{{ url_for('main.services') }}" class="btn btn-hc">Book a service</a></div>
+<div class="row g-3 mb-4"><div class="col-6 col-md-3"><div class="card stat-card"><div class="card-body"><div class="small text-muted">Active bookings</div><div class="display-6">{{ active_count }}</div></div></div></div>
+<div class="col-6 col-md-3"><div class="card stat-card"><div class="card-body"><div class="small text-muted">Total bookings</div><div class="display-6">{{ bookings|length }}</div></div></div></div></div>
+<div class="table-responsive"><table class="table table-hover align-middle"><thead><tr><th>Service</th><th>Date &amp; time</th><th>Address</th><th>Price</th><th>Status</th><th>Payment</th><th>Actions</th></tr></thead><tbody>
+{% for b in bookings %}<tr><td>{{ b.service_name }}</td><td>{{ b.booking_date|pretty_date }}<br><small class="text-muted">{{ b.booking_time }}</small></td><td class="small">{{ b.address }}</td><td>{{ b.price|money }}</td>
+<td>{{ status_badge(b.status) }}</td><td><span class="badge bg-secondary">{{ b.payment_status }}</span></td>
+<td>{% if b.can_cancel %}<form method="post" action="{{ url_for('customer.cancel', booking_id=b._id) }}" data-confirm="Cancel this booking?" class="d-inline">{{ csrf() }}<button class="btn btn-sm btn-outline-danger">Cancel</button></form>{% endif %}
+{% if b.can_review %}<a class="btn btn-sm btn-hc" href="{{ url_for('customer.review', booking_id=b._id) }}">Review</a>{% elif b.reviewed %}<span class="text-muted small">Reviewed</span>{% endif %}</td></tr>
+{% else %}<tr><td colspan="7" class="text-center text-muted py-4">You have no bookings yet.</td></tr>{% endfor %}</tbody></table></div></div>{% endblock %}

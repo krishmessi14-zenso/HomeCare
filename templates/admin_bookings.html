@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% from "_macros.html" import csrf, status_badge %}{% block title %}Bookings{% endblock %}
+{% block content %}<div class="container-fluid px-4 mt-4"><div class="d-flex flex-wrap justify-content-between mb-3"><h2>All Bookings</h2>
+<form method="get" class="d-flex gap-2"><select class="form-select" name="status" aria-label="Filter by status"><option value="">All statuses</option>{% for s in statuses %}<option {{ 'selected' if s == status }}>{{ s }}</option>{% endfor %}</select><button class="btn btn-hc">Filter</button></form></div>
+<div class="table-responsive"><table class="table table-hover align-middle"><thead><tr><th>Service</th><th>Customer</th><th>When</th><th>Address</th><th>Status</th><th>Provider</th><th>Assign / reassign</th><th></th></tr></thead><tbody>
+{% for b in bookings %}<tr><td>{{ b.service_name }}<br><small class="text-muted">{{ b.price|money }} · {{ b.payment_status }}</small></td><td>{{ b.customer_name }}</td>
+<td>{{ b.booking_date|pretty_date }}<br><small>{{ b.booking_time }} · {{ b.duration_minutes }} min</small></td><td class="small">{{ b.address }}</td><td>{{ status_badge(b.status) }}</td><td>{{ b.provider_name or '—' }}</td>
+<td>{% if b.assignable %}{% if b.available_providers %}<form method="post" class="d-flex gap-1" action="{{ url_for('admin.assign', booking_id=b._id) }}">{{ csrf() }}
+<select class="form-select form-select-sm assign-select" name="provider_id" required aria-label="Provider"><option value="">Select provider…</option>{% for p in b.available_providers %}<option value="{{ p._id }}">{{ p.name }}</option>{% endfor %}</select><button class="btn btn-sm btn-hc">Assign</button></form>
+{% else %}<small class="text-muted">No free approved provider</small>{% endif %}{% else %}<small class="text-muted">Locked ({{ b.status }})</small>{% endif %}</td>
+<td>{% if b.cancellable %}<form method="post" data-confirm="Cancel this booking?" action="{{ url_for('admin.cancel', booking_id=b._id) }}">{{ csrf() }}<button class="btn btn-sm btn-outline-danger">Cancel</button></form>{% endif %}</td></tr>
+{% else %}<tr><td colspan="8" class="text-center text-muted py-4">No bookings found.</td></tr>{% endfor %}</tbody></table></div></div>{% endblock %}

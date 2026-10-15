@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% from "_macros.html" import csrf %}{% block title %}Login{% endblock %}
+{% block content %}<div class="container"><div class="row justify-content-center"><div class="col-md-6 col-lg-4"><div class="card shadow-sm mt-4"><div class="card-body p-4">
+  <h3 class="mb-3 text-hc">Log in</h3>
+  <form method="post" novalidate>{{ csrf() }}<input type="hidden" name="next" value="{{ next or '' }}">
+    <div class="mb-3"><label class="form-label" for="email">Email</label><input class="form-control" id="email" name="email" type="email" maxlength="120" required autofocus></div>
+    <div class="mb-3"><label class="form-label" for="password">Password</label><input class="form-control" id="password" name="password" type="password" maxlength="128" required></div>
+    <button class="btn btn-hc w-100">Log in</button></form>
+  <p class="small text-muted mt-3 mb-0">New customer? <a href="{{ url_for('auth.register') }}">Register</a>. Providers are created by an administrator.</p>
+</div></div></div></div></div>{% endblock %}

@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% from "_macros.html" import status_badge %}{% block title %}Admin Dashboard{% endblock %}
+{% block content %}<div class="container mt-4"><h2>Admin Dashboard</h2>
+<div class="row g-3 my-2">
+{% for label, key in [('Total customers','customers'),('Active providers','providers'),('Active services','services'),('Pending bookings','pending'),('Completed bookings','completed')] %}
+<div class="col-6 col-lg"><div class="card stat-card h-100"><div class="card-body"><div class="small text-muted">{{ label }}</div><div class="display-6">{{ stats[key] }}</div></div></div></div>{% endfor %}</div>
+{% if stats.unapproved_providers %}<div class="alert alert-warning">{{ stats.unapproved_providers }} provider account(s) awaiting approval. <a href="{{ url_for('admin.users') }}">Review</a></div>{% endif %}
+<div class="d-flex flex-wrap gap-2 my-3"><a class="btn btn-hc" href="{{ url_for('admin.bookings', status='Pending') }}">Assign pending bookings</a><a class="btn btn-outline-hc" href="{{ url_for('admin.service_new') }}">Add service</a><a class="btn btn-outline-hc" href="{{ url_for('admin.provider_new') }}">Add provider</a></div>
+<h5 class="mt-4">Latest bookings</h5><div class="table-responsive"><table class="table table-sm align-middle"><thead><tr><th>Service</th><th>Date</th><th>Status</th></tr></thead><tbody>
+{% for b in recent %}<tr><td>{{ b.service_name }}</td><td>{{ b.booking_date|pretty_date }} {{ b.booking_time }}</td><td>{{ status_badge(b.status) }}</td></tr>{% else %}<tr><td colspan="3" class="text-muted">No bookings yet.</td></tr>{% endfor %}</tbody></table></div></div>{% endblock %}

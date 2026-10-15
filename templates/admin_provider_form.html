@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% from "_macros.html" import csrf %}{% block title %}{{ 'Edit' if provider else 'New' }} provider{% endblock %}
+{% block content %}<div class="container mt-4"><div class="row justify-content-center"><div class="col-md-8 col-lg-6"><div class="card shadow-sm"><div class="card-body p-4">
+<h3 class="text-hc">{{ 'Edit' if provider else 'Add' }} provider</h3>
+<form method="post" novalidate>{{ csrf() }}
+<div class="mb-3"><label class="form-label" for="name">Name</label><input class="form-control" id="name" name="name" maxlength="80" value="{{ form.get('name','') }}" required></div>
+<div class="mb-3"><label class="form-label" for="email">Email</label><input class="form-control" id="email" name="email" type="email" maxlength="120" value="{{ form.get('email','') }}" required></div>
+<div class="mb-3"><label class="form-label" for="phone">Phone</label><input class="form-control" id="phone" name="phone" maxlength="20" value="{{ form.get('phone','') }}" required></div>
+<div class="mb-3"><label class="form-label" for="password">{{ 'New password (leave blank to keep)' if provider else 'Initial password' }}</label><input class="form-control" id="password" name="password" type="password" maxlength="128" autocomplete="new-password" {{ '' if provider else 'required' }}></div>
+{% if not provider %}<div class="form-check mb-3"><input class="form-check-input" type="checkbox" id="approved" name="approved" {{ 'checked' if form.get('approved') == 'on' }}><label class="form-check-label" for="approved">Approve immediately</label></div>{% endif %}
+<button class="btn btn-hc">Save</button> <a class="btn btn-link" href="{{ url_for('admin.users') }}">Cancel</a></form></div></div></div></div></div>{% endblock %}

@@ -1,0 +1,13 @@
+{% extends "base.html" %}{% from "_macros.html" import stars, service_image %}{% block title %}{{ service.name }}{% endblock %}
+{% block content %}<div class="container mt-4"><div class="row g-4">
+  <div class="col-md-5"><img class="service-detail-image img-fluid rounded" src="{{ service_image(service) }}" alt="{{ service.name }}"></div>
+  <div class="col-md-7"><span class="badge bg-hc-light text-hc">{{ service.category }}</span><h2 class="mt-2">{{ service.name }}</h2>
+    {% if avg %}<p>{{ stars(avg|round|int) }} <small class="text-muted">{{ avg }} ({{ n }} review{{ 's' if n != 1 }})</small></p>{% endif %}
+    <p>{{ service.description }}</p>
+    <ul class="list-unstyled"><li><strong>Price:</strong> <span class="text-hc fs-5">{{ service.price|money }}</span></li><li><strong>Estimated duration:</strong> {{ service.duration_minutes }} minutes</li></ul>
+    {% if not current_user.is_authenticated %}<a class="btn btn-hc btn-lg" href="{{ url_for('auth.login', next=url_for('customer.book', service_id=service._id)) }}">Log in to book</a>
+    {% elif current_user.role == 'customer' %}<a class="btn btn-hc btn-lg" href="{{ url_for('customer.book', service_id=service._id) }}">Book this service</a>
+    {% else %}<div class="alert alert-secondary">Only customer accounts can book services.</div>{% endif %}</div></div>
+  <h4 class="mt-5">Customer reviews</h4>
+  {% for r in reviews %}<div class="border-bottom py-2">{{ stars(r.rating) }} <strong>{{ r.customer_first_name }}</strong> <small class="text-muted">{{ r.created_at|pretty_dt }}</small><p class="mb-0">{{ r.comment }}</p></div>
+  {% else %}<p class="text-muted">No reviews yet.</p>{% endfor %}</div>{% endblock %}

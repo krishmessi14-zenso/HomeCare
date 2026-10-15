@@ -1,0 +1,8 @@
+Home and service photographs downloaded from Unsplash for local use.
+
+homecare-hero.jpg: https://images.unsplash.com/photo-1581578731548-c64695cc6952
+plumbing.jpg: https://images.unsplash.com/photo-1607472586893-edb57bdc0e39
+electrical.jpg: https://images.unsplash.com/photo-1621905251189-08b45d6a269e
+cleaning.jpg: https://images.unsplash.com/photo-1527515637462-cff94eecc1ac
+repairs.jpg: https://images.unsplash.com/photo-1504307651254-35680f356dfd
+gardening.jpg: https://images.unsplash.com/photo-1416879595882-3373a0480b5b

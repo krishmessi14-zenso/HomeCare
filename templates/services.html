@@ -1,0 +1,17 @@
+{% extends "base.html" %}{% from "_macros.html" import service_card %}{% block title %}Services{% endblock %}
+{% block content %}<div class="container mt-4"><h2 class="mb-3">Our Services</h2>
+<form class="card card-body mb-4" method="get"><div class="row g-2 align-items-end">
+  <div class="col-md-3"><label class="form-label small" for="q">Search</label><input class="form-control" id="q" name="q" maxlength="60" value="{{ q }}" placeholder="e.g. leak, AC"></div>
+  <div class="col-md-3"><label class="form-label small" for="category">Category</label><select class="form-select" id="category" name="category"><option value="">All</option>
+    {% for c in categories %}<option value="{{ c }}" {{ 'selected' if c == category }}>{{ c }}</option>{% endfor %}</select></div>
+  <div class="col-6 col-md-1"><label class="form-label small" for="min_price">Min</label><input class="form-control" id="min_price" name="min_price" type="number" min="0" step="1" value="{{ min_price }}"></div>
+  <div class="col-6 col-md-1"><label class="form-label small" for="max_price">Max</label><input class="form-control" id="max_price" name="max_price" type="number" min="0" step="1" value="{{ max_price }}"></div>
+  <div class="col-md-2"><label class="form-label small" for="sort">Sort</label><select class="form-select" id="sort" name="sort">
+    <option value="name" {{ 'selected' if sort=='name' }}>Name</option><option value="price_asc" {{ 'selected' if sort=='price_asc' }}>Price ↑</option><option value="price_desc" {{ 'selected' if sort=='price_desc' }}>Price ↓</option></select></div>
+  <div class="col-md-2 d-grid"><button class="btn btn-hc">Filter</button></div></div></form>
+<div class="row g-4">{% for s in services %}{{ service_card(s) }}{% else %}<div class="col-12"><div class="alert alert-info">No services match your search.</div></div>{% endfor %}</div>
+{% if total_pages > 1 %}<nav class="mt-4" aria-label="Service pages"><ul class="pagination justify-content-center">
+<li class="page-item {{ 'disabled' if page == 1 }}"><a class="page-link" href="{{ url_for('main.services', page=page-1, q=q, category=category, min_price=min_price, max_price=max_price, sort=sort) }}" aria-label="Previous page">&laquo;</a></li>
+{% for number in range(1, total_pages + 1) %}<li class="page-item {{ 'active' if number == page }}"><a class="page-link" href="{{ url_for('main.services', page=number, q=q, category=category, min_price=min_price, max_price=max_price, sort=sort) }}">{{ number }}</a></li>{% endfor %}
+<li class="page-item {{ 'disabled' if page == total_pages }}"><a class="page-link" href="{{ url_for('main.services', page=page+1, q=q, category=category, min_price=min_price, max_price=max_price, sort=sort) }}" aria-label="Next page">&raquo;</a></li></ul></nav><p class="small text-center text-muted">Showing {{ (page - 1) * 9 + 1 }}–{{ (page - 1) * 9 + services|length }} of {{ total_services }} services</p>{% endif %}
+</div>{% endblock %}

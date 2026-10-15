@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% from "_macros.html" import status_badge, stars %}{% block title %}Reports{% endblock %}
+{% block content %}<div class="container mt-4"><h2>Reports</h2>
+<h5 class="mt-4">Bookings by status</h5><div class="row g-2">{% for s in statuses %}<div class="col-6 col-md-3 col-lg"><div class="card stat-card"><div class="card-body py-2">{{ status_badge(s) }}<div class="fs-3">{{ r.by_status.get(s, 0) }}</div></div></div></div>{% endfor %}</div>
+<h5 class="mt-4">Bookings by service</h5><div class="table-responsive"><table class="table table-sm"><thead><tr><th>Service</th><th>Total</th><th>Completed</th><th>Completed value</th></tr></thead><tbody>
+{% for s in r.by_service %}<tr><td>{{ s._id }}</td><td>{{ s.total }}</td><td>{{ s.completed }}</td><td>{{ s.value|money }}</td></tr>{% else %}<tr><td colspan="4" class="text-muted">No data.</td></tr>{% endfor %}</tbody></table></div>
+<h5 class="mt-4">Provider ratings</h5><div class="table-responsive"><table class="table table-sm"><thead><tr><th>Provider</th><th>Average</th><th>Reviews</th></tr></thead><tbody>
+{% for p in r.ratings %}<tr><td>{{ p.name }}</td><td>{{ stars(p.avg|round|int) }} {{ p.avg }}</td><td>{{ p.n }}</td></tr>{% else %}<tr><td colspan="3" class="text-muted">No reviews yet.</td></tr>{% endfor %}</tbody></table></div></div>{% endblock %}
