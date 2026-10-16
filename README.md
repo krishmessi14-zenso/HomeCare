@@ -91,6 +91,17 @@ python app.py
 Browse to **http://127.0.0.1:5000**. Stop the server with `Ctrl + C`.
 (Production: `gunicorn "app:create_app()"` on Linux behind HTTPS with `COOKIE_SECURE=true`. Debug mode is never enabled.)
 
+## Deploy publicly on Render
+The repository includes `render.yaml` to configure a Render web service.
+
+1. Push this project to a GitHub repository. Do not commit `.env` or put database credentials in source code.
+2. Create a MongoDB Atlas cluster and database user with read/write access to the app database. In Atlas **Network Access**, allow connections from Render. Render's outbound IPs may change; for a free service this may require allowing `0.0.0.0/0`. Use a strong, unique database password and never share the connection string.
+3. In Render, choose **New → Blueprint**, connect the GitHub repository, and deploy the `render.yaml` blueprint.
+4. In the Render service's environment settings, set `MONGO_URI` to the Atlas connection string. The blueprint generates `SECRET_KEY` and sets `COOKIE_SECURE=true`; keep those values private and do not replace the generated secret with a placeholder.
+5. When deployment succeeds, open the `onrender.com` URL shown by Render. To add the initial administrator and sample services, run `create_admin.py` and `seed_data.py` in an environment configured with the same Atlas `MONGO_URI`.
+
+The free web service can sleep when idle, and files written to its local filesystem (including uploaded images) are not durable across deploys/restarts. The checked-in static assets are unaffected. Use persistent/object storage before relying on user uploads in production.
+
 ## 10. Creating provider accounts
 Providers cannot self-register. Log in as admin → **Users → Add provider** → fill in details, tick **Approve immediately**
 (or approve later with the **Approve** button). Only *active and approved* providers can be assigned jobs.

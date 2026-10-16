@@ -5,6 +5,8 @@ Flask-WTF>=1.2,<2
 pymongo>=4.6,<5
 Werkzeug>=3.0,<4
 python-dotenv>=1.0,<2
+# Production WSGI server (not supported on Windows).
+gunicorn>=23,<24; sys_platform != "win32"
 # Testing (tests use an in-memory mongomock database, never your real data)
 pytest>=8.0
 mongomock>=4.1,<5
